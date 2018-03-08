@@ -2,6 +2,8 @@
   (:require [clojure.string :as string]
             [seesaw.font :as font]))
 
+(def config-file (str (System/getProperty "user.home") "/.deskmap.clj"))
+
 (def window-color "#000033")
 (def current-window-color "#CC1111")
 (def tag-color "#7777ee")
@@ -10,7 +12,7 @@
 (def window-font (font/font "ARIAL-PLAIN-12"))
 (def tag-font (font/font "ARIAL-ITALIC-10"))
 
-(def desk-names {0 "Main", 1 "Test"})
+(def desk-names {-1 "Fixed", 0 "Main", 1 "Test"})
 
 (defn hsplit [w]
   (if (< (:x w) 512) "<-Left" "Right->"))
@@ -42,15 +44,14 @@
 (defn window-label [w]
   (str "     " (second (string/split (:class w) #"\.")) ": " (:label w)))
 
-;;(defn grouper [w]
-;;  [(:desk w)
-;;   (cond (< (:y w) 250) 0
-;;         (< (:y w) 500) 1
-;;         :else 2)
-;;   (< (:x w) 1000)])
-
 
 (defn sort-and-group [raw]
   (sort-by first
            (group-by grouper
                      (sort-by sorter raw))))
+
+(defn load-config []
+  (try
+    (load-file config-file)
+    (catch Exception e
+      (println "caught: " (.getMessage e)))))

@@ -7,5 +7,6 @@
   (:gen-class))
 
 (defn -main [& args]
+  (cfg/load-config)
   (state/full-update-state)
   (rdr/render))

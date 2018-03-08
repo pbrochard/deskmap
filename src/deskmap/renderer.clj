@@ -36,7 +36,8 @@
   (doto (frame
          :title   "Desktop Map"
          :content (make-panel dm)
-         :size    [600 :by 800])
+         :size    [600 :by 800]
+         :on-close :exit)
     (.setFocusTraversalKeysEnabled false)
     (.setLocationRelativeTo nil)))
 
@@ -54,13 +55,21 @@
   (state/focus-by-id (:id (selection (select @frm [:#listbox]))))
   (show! @frm))
 
+(defn reload-config [e]
+  (cfg/load-config)
+  (redraw-panel))
 
+
+(def bind-keys
+  {"control L" do-update-state
+   "shift F" do-focus
+   "SPACE" do-focus
+   "shift SHIFT" do-focus
+   "control R" reload-config})
 
 (defn add-handler []
-  (map-key @frm "control L" do-update-state :scope :global)
-  (map-key @frm "shift F" do-focus :scope :global)
-  (map-key @frm "SPACE" do-focus :scope :global)
-  (map-key @frm "shift SHIFT" do-focus :scope :global)
+  (doseq [[k f] bind-keys]
+    (map-key @frm k f :scope :global))
   ;;(listen :key-pressed (fn [e] (alert "plop" e))))))
   ;;(map-key frm "K" (fn [e] (config! (select frm [:#lb1]) :foreground :blue :paint {:before selected})) :scope :global)
   ;;(map-key frm "shift K" (fn [e] (config! (select frm [:#lb1]) :foreground :blue :paint {:before original})) :scope :global)
@@ -68,7 +77,6 @@
   ;;(map-key frm "control ENTER" (fn [e] (alert "plop" e)) :scope :global)
   ;;(map-key frm "SPACE" (fn [e] (alert "plop" e)) :scope :global)
   ;;(map-key frm "TAB" (fn [e] (alert "plop" e)) :scope :global)
-
   (listen (select @frm [:#listbox]) :mouse-clicked do-focus))
 
 
