@@ -4,7 +4,7 @@ A Clojure library designed to implement a very simple window finder in old schoo
 
 ## Usage
 
-$ lein uberjar
+$ lein uberjar<br />
 $ java -jar target/deskmap-x.y.z-SNAPSHOT-standalone.jar
 
 ## License
