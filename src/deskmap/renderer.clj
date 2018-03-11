@@ -70,8 +70,8 @@
   (redraw-panel))
 
 (defn do-close [e]
-  (state/focus-default)
-  (hide! @frm))
+  (hide! @frm)
+  (state/focus-default))
 
 (def bind-keys
   {"ENTER" do-validate
@@ -100,3 +100,16 @@
   (reset! frm (make-frame @state/state))
   (redraw-panel)
   (show! @frm))
+
+(defn show-frame []
+  (repaint! @frm)
+  (show! @frm))
+
+(defn update-and-render []
+  (state/full-update-state)
+  (render))
+
+(defn open-or-show []
+  (if (.isVisible @rdr/frm)
+    (rdr/show-frame)
+    (rdr/update-and-render)))

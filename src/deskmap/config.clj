@@ -2,6 +2,8 @@
   (:require [clojure.string :as string]
             [seesaw.font :as font]))
 
+(def server-port 10001)
+
 (def config-file (str (System/getProperty "user.home") "/.deskmap.clj"))
 
 (def window-color "#000033")
