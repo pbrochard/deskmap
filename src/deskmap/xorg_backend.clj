@@ -23,10 +23,7 @@
     (into #{}
           (map #(win-info % foc) (string/split (:out (sh "wmctrl" "-xGi" "-l")) #"\n")))))
 
-
-;; xdotool search --onlyvisible . behave %@ focus exec echo "focus"
-;; can be used to inform about focus update
-
 (defn focus-by-id [id]
   (println (str "xdotool " "windowactivate " "--sync " id))
-  (sh "xdotool" "windowactivate" "--sync" (str id)))
+  (sh "xdotool" "windowactivate" "--sync" (str id))
+  (Thread/sleep 250))

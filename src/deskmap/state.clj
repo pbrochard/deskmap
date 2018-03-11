@@ -1,5 +1,6 @@
 (ns deskmap.state
-  (:require [deskmap.xorg-backend :as raw]))
+  (:require [deskmap.xorg-backend :as raw]
+            [clojure.set :as set]))
 
 (def state (atom #{}))
 
@@ -30,7 +31,12 @@
   (swap! state untag #(:current %) :current)
   (swap! state update-state))
 
+(defn get-current [st]
+  (first (set/select :current st)))
+
 
 (defn focus-by-id [id]
-  (raw/focus-by-id id)
-  (full-update-state))
+  (raw/focus-by-id id))
+
+(defn focus-default []
+  (focus-by-id (:id (get-current @state))))

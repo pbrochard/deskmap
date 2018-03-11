@@ -20,6 +20,8 @@
 (defn vsplit [w]
   (if (< (:y w) 300) "^-Up" "Down-v"))
 
+(defn hidder [w]
+  (= (:desk w) -1))
 
 (defn sorter [w]
   [(:desk w) (:x w) (:y w) (- Integer/MAX_VALUE (:focus-time w 0))])
@@ -48,7 +50,8 @@
 (defn sort-and-group [raw]
   (sort-by first
            (group-by grouper
-                     (sort-by sorter raw))))
+                     (sort-by sorter
+                              (remove hidder raw)))))
 
 (defn load-config []
   (try

@@ -5,6 +5,12 @@
 
 (def frm (atom nil))
 
+(defn get-listbox []
+  (select @frm [:#listbox]))
+
+(defn get-selection []
+  (selection (get-listbox)))
+
 (defn produce-panel [dm]
   (reduce (fn [m x]
             (reduce (fn [n y]
@@ -34,14 +40,24 @@
 
 (defn make-frame [dm]
   (doto (frame
+         ;;:on-close :exit
          :title   "Desktop Map"
          :content (make-panel dm)
-         :size    [600 :by 800]
-         :on-close :exit)
+         :size    [600 :by 800])
     (.setFocusTraversalKeysEnabled false)
     (.setLocationRelativeTo nil)))
 
 (declare redraw-panel)
+
+(defn do-validate [e]
+  (hide! @frm)
+  (println (get-selection))
+  (state/focus-by-id (:id (get-selection))))
+
+(defn do-focus [e]
+  (do-validate e)
+  (repaint! @frm)
+  (show! @frm))
 
 (defn do-update-state [e]
   (hide! @frm)
@@ -49,19 +65,18 @@
   (redraw-panel)
   (show! @frm))
 
-(defn do-focus [e]
-  (hide! @frm)
-  (println (selection (select @frm [:#listbox])))
-  (state/focus-by-id (:id (selection (select @frm [:#listbox]))))
-  (show! @frm))
-
 (defn reload-config [e]
   (cfg/load-config)
   (redraw-panel))
 
+(defn do-close [e]
+  (state/focus-default)
+  (hide! @frm))
 
 (def bind-keys
-  {"control L" do-update-state
+  {"ENTER" do-validate
+   "ESCAPE" do-close
+   "control L" do-update-state
    "shift F" do-focus
    "SPACE" do-focus
    "shift SHIFT" do-focus
@@ -70,20 +85,13 @@
 (defn add-handler []
   (doseq [[k f] bind-keys]
     (map-key @frm k f :scope :global))
-  ;;(listen :key-pressed (fn [e] (alert "plop" e))))))
-  ;;(map-key frm "K" (fn [e] (config! (select frm [:#lb1]) :foreground :blue :paint {:before selected})) :scope :global)
-  ;;(map-key frm "shift K" (fn [e] (config! (select frm [:#lb1]) :foreground :blue :paint {:before original})) :scope :global)
-  ;;(map-key frm "UP" (fn [e] (alert "plop" e)) :scope :global)
-  ;;(map-key frm "control ENTER" (fn [e] (alert "plop" e)) :scope :global)
-  ;;(map-key frm "SPACE" (fn [e] (alert "plop" e)) :scope :global)
-  ;;(map-key frm "TAB" (fn [e] (alert "plop" e)) :scope :global)
-  (listen (select @frm [:#listbox]) :mouse-clicked do-focus))
+  (listen (get-listbox) :mouse-clicked do-focus))
 
 
 (defn redraw-panel []
   (let [st @state/state]
     (config! @frm :content (make-panel st))
-    (selection! (select @frm [:#listbox]) (first (filter :current st)))
+    (selection! (get-listbox) (state/get-current st))
     (add-handler)
     ;;(state/place-window)))
     ))
