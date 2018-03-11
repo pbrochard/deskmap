@@ -110,6 +110,6 @@
   (render))
 
 (defn open-or-show []
-  (if (.isVisible @rdr/frm)
-    (rdr/show-frame)
-    (rdr/update-and-render)))
+  (if (.isVisible @frm)
+    (show-frame)
+    (update-and-render)))
