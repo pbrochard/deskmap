@@ -27,3 +27,8 @@
   (println (str "xdotool " "windowactivate " "--sync " id))
   (sh "xdotool" "windowactivate" "--sync" (str id))
   (Thread/sleep 250))
+
+
+(defn move-to-desk [id desk]
+  (sh "xdotool" "set_desktop_for_window" (str id) (str desk))
+  (focus-by-id id))

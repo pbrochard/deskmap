@@ -67,11 +67,23 @@
 
 (defn reload-config [e]
   (cfg/load-config)
+  (state/full-update-state)
   (redraw-panel))
 
 (defn do-close [e]
   (hide! @frm)
   (state/focus-default))
+
+(defn move-to [e]
+  (try
+    (let [new-desk (Integer/parseInt (input "Move current window to desktop:"))]
+      (state/move-to-desk (:id (get-selection)) (dec new-desk)))
+    (hide! @frm)
+    (state/full-update-state)
+    (redraw-panel)
+    (show! @frm)
+    (catch Exception e)))
+
 
 (def bind-keys
   {"ENTER" do-validate
@@ -79,7 +91,8 @@
    "control L" do-update-state
    "shift F" do-focus
    "SPACE" do-focus
-   "shift SHIFT" do-focus
+   "F" do-focus
+   "M" move-to
    "control R" reload-config})
 
 (defn add-handler []

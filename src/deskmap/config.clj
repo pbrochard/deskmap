@@ -36,8 +36,8 @@
 
 (defn translate-desk [tg]
   (assoc-in tg [0] (if-let [name (get desk-names (tg 0))]
-                     (str (tg 0) ":" name)
-                     (tg 0))))
+                     (str (inc (tg 0)) ":" name)
+                     (inc (tg 0)))))
 
 (defn translate-tags [tg]
   (translate-desk tg))
@@ -46,7 +46,7 @@
   (string/join ", "  (translate-desk tg)))
 
 (defn window-label [w]
-  (str "     " (second (string/split (:class w) #"\.")) ": " (:label w)))
+  (str "  | " (second (string/split (:class w) #"\.")) ": " (:label w)))
 
 
 (defn sort-and-group [raw]

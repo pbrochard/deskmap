@@ -40,3 +40,7 @@
 
 (defn focus-default []
   (focus-by-id (:id (get-current @state))))
+
+(defn move-to-desk [id desk]
+  (println "moving" id "to" desk)
+  (raw/move-to-desk id desk))
