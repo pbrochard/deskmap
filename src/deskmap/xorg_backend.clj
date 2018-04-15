@@ -15,7 +15,7 @@
                             util/parse-int)
              [:id] util/parse-hex)]
     (if (= (:id nfo) foc)
-      (assoc nfo :current true :focus-time (util/now-in-millis))
+      (assoc nfo :current true :default true :focus-time (util/now-in-millis))
       nfo)))
 
 (defn raw-state []

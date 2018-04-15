@@ -29,10 +29,14 @@
 
 (defn full-update-state []
   (swap! state untag #(:current %) :current)
+  (swap! state untag #(:default %) :default)
   (swap! state update-state))
 
 (defn get-current [st]
   (first (set/select :current st)))
+
+(defn get-default [st]
+  (first (set/select :default st)))
 
 
 (defn focus-by-id [id]
