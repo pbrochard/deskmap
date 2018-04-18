@@ -120,7 +120,7 @@
         (draw g (rect x y dx dy) (style :background cfg/select-default-bg-color))))))
 
 (defn make-panel [panel dm dflt curr]
-  (let [w (width panel)
+  (let [w (dec (width panel))
         h (dec (height panel))]
     (let [{p :pos maxs :maxs dvs :dvs sizes :sizes} (translate-pos dm (cfg/dividors) w h)
           {dx :dx dy :dy} (last sizes)]
